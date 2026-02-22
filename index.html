@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sleuth Data Solutions — Web Scraping & Data-as-a-Service</title>
+<meta name="description" content="Turn public web data into structured, actionable datasets. Custom web scraping, data pipelines, and API delivery on your schedule.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0a0e1a;--bg2:#111827;--bg3:#1a2035;--card:#151c2e;--accent:#3b82f6;--accent2:#60a5fa;--accent-glow:rgba(59,130,246,.15);--text:#e2e8f0;--text2:#94a3b8;--white:#f8fafc;--border:#1e293b;--radius:12px}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}
+a{color:var(--accent2);text-decoration:none}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;backdrop-filter:blur(20px);background:rgba(10,14,26,.8);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;transition:all .3s}
+.logo{font-size:1.25rem;font-weight:700;color:var(--white);display:flex;align-items:center;gap:.5rem}
+.logo svg{width:28px;height:28px}
+.nav-links{display:flex;gap:2rem;align-items:center}
+.nav-links a{color:var(--text2);font-size:.875rem;font-weight:500;transition:color .2s}
+.nav-links a:hover{color:var(--white)}
+.nav-cta{background:var(--accent);color:#fff!important;padding:.5rem 1.25rem;border-radius:8px;font-weight:600;transition:all .2s}
+.nav-cta:hover{background:#2563eb;transform:translateY(-1px)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:4px}
+.hamburger span{width:24px;height:2px;background:var(--text);transition:all .3s}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:8rem 2rem 6rem;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 50% 30%,rgba(59,130,246,.08) 0%,transparent 60%);pointer-events:none}
+.hero-content{max-width:800px;position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;background:var(--accent-glow);border:1px solid rgba(59,130,246,.3);color:var(--accent2);padding:.4rem 1rem;border-radius:100px;font-size:.8rem;font-weight:600;margin-bottom:2rem;letter-spacing:.5px}
+.hero h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:800;line-height:1.1;color:var(--white);margin-bottom:1.5rem;letter-spacing:-.02em}
+.hero h1 span{background:linear-gradient(135deg,var(--accent),#818cf8);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:1.2rem;color:var(--text2);max-width:600px;margin:0 auto 2.5rem;line-height:1.7}
+.btn{display:inline-flex;align-items:center;gap:.5rem;padding:.875rem 2rem;border-radius:10px;font-weight:600;font-size:1rem;transition:all .25s;cursor:pointer;border:none;font-family:inherit}
+.btn-primary{background:var(--accent);color:#fff;box-shadow:0 0 30px rgba(59,130,246,.3)}
+.btn-primary:hover{background:#2563eb;transform:translateY(-2px);box-shadow:0 0 40px rgba(59,130,246,.4)}
+.btn-secondary{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--white)}
+.hero-buttons{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.hero-stats{display:flex;gap:3rem;justify-content:center;margin-top:4rem;flex-wrap:wrap}
+.hero-stats div{text-align:center}
+.hero-stats strong{display:block;font-size:2rem;font-weight:800;color:var(--white)}
+.hero-stats span{font-size:.8rem;color:var(--text2);text-transform:uppercase;letter-spacing:1px}
+
+/* SECTIONS */
+section{padding:6rem 2rem}
+.container{max-width:1100px;margin:0 auto}
+.section-label{display:inline-flex;align-items:center;gap:.5rem;color:var(--accent2);font-size:.8rem;font-weight:600;letter-spacing:2px;text-transform:uppercase;margin-bottom:1rem}
+.section-title{font-size:clamp(1.8rem,4vw,2.8rem);font-weight:800;color:var(--white);margin-bottom:1rem;letter-spacing:-.01em}
+.section-sub{color:var(--text2);font-size:1.05rem;max-width:600px;margin-bottom:3.5rem;line-height:1.7}
+.text-center{text-align:center}
+.text-center .section-sub{margin-left:auto;margin-right:auto}
+
+/* SERVICES */
+.services-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1.5rem}
+.service-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;transition:all .3s;position:relative;overflow:hidden}
+.service-card:hover{border-color:rgba(59,130,246,.3);transform:translateY(-4px);box-shadow:0 20px 40px rgba(0,0,0,.3)}
+.service-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--accent),#818cf8);opacity:0;transition:opacity .3s}
+.service-card:hover::before{opacity:1}
+.service-icon{width:48px;height:48px;border-radius:10px;background:var(--accent-glow);display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;font-size:1.5rem}
+.service-card h3{font-size:1.1rem;font-weight:700;color:var(--white);margin-bottom:.75rem}
+.service-card p{font-size:.9rem;color:var(--text2);line-height:1.6}
+
+/* INDUSTRIES */
+#industries{background:var(--bg2)}
+.industries-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem}
+.industry-item{display:flex;align-items:center;gap:.75rem;padding:1.25rem 1.5rem;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);transition:all .3s;font-weight:500;color:var(--text)}
+.industry-item:hover{border-color:rgba(59,130,246,.3);background:var(--bg3);color:var(--white)}
+.industry-item span{font-size:1.3rem}
+
+/* HOW IT WORKS */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:2rem;position:relative}
+.step{text-align:center;padding:2.5rem 2rem;position:relative}
+.step-num{width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,var(--accent),#818cf8);color:#fff;display:inline-flex;align-items:center;justify-content:center;font-size:1.25rem;font-weight:800;margin-bottom:1.5rem}
+.step h3{font-size:1.2rem;font-weight:700;color:var(--white);margin-bottom:.75rem}
+.step p{font-size:.9rem;color:var(--text2);line-height:1.6}
+
+/* PRICING */
+#pricing{background:var(--bg2)}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;align-items:start}
+.price-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2.5rem;transition:all .3s;position:relative}
+.price-card.featured{border-color:var(--accent);box-shadow:0 0 40px rgba(59,130,246,.15)}
+.price-card.featured::before{content:'MOST POPULAR';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--accent),#818cf8);color:#fff;font-size:.7rem;font-weight:700;padding:.35rem 1rem;border-radius:100px;letter-spacing:1px}
+.price-card h3{font-size:1.1rem;font-weight:600;color:var(--text2);margin-bottom:.5rem}
+.price-amount{font-size:3rem;font-weight:800;color:var(--white);margin-bottom:.25rem}
+.price-amount span{font-size:1rem;font-weight:500;color:var(--text2)}
+.price-desc{font-size:.85rem;color:var(--text2);margin-bottom:1.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.price-features{list-style:none;margin-bottom:2rem;display:flex;flex-direction:column;gap:.75rem}
+.price-features li{font-size:.9rem;color:var(--text);display:flex;align-items:center;gap:.5rem}
+.price-features li::before{content:'✓';color:var(--accent2);font-weight:700}
+.price-card .btn{width:100%;justify-content:center}
+
+/* CONTACT */
+#contact{position:relative}
+.contact-wrapper{display:grid;grid-template-columns:1fr 1fr;gap:3rem;align-items:start}
+.contact-info h3{font-size:1.5rem;font-weight:700;color:var(--white);margin-bottom:1rem}
+.contact-info p{color:var(--text2);margin-bottom:2rem;line-height:1.7}
+.contact-link{display:flex;align-items:center;gap:.75rem;padding:1rem;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:1rem;transition:all .3s;color:var(--text)}
+.contact-link:hover{border-color:var(--accent);color:var(--white)}
+.contact-link svg{width:20px;height:20px;color:var(--accent2);flex-shrink:0}
+.contact-form{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:2.5rem}
+.form-group{margin-bottom:1.25rem}
+.form-group label{display:block;font-size:.85rem;font-weight:600;color:var(--text);margin-bottom:.5rem}
+.form-group input,.form-group textarea{width:100%;padding:.75rem 1rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;color:var(--white);font-family:inherit;font-size:.9rem;transition:border-color .2s}
+.form-group input:focus,.form-group textarea:focus{outline:none;border-color:var(--accent)}
+.form-group textarea{resize:vertical;min-height:100px}
+
+/* FOOTER */
+footer{border-top:1px solid var(--border);padding:2.5rem 2rem;text-align:center}
+footer p{color:var(--text2);font-size:.85rem}
+footer a{color:var(--accent2)}
+
+/* ANIMATIONS */
+.fade-up{opacity:0;transform:translateY(30px);transition:all .6s ease}
+.fade-up.visible{opacity:1;transform:translateY(0)}
+
+/* MOBILE */
+@media(max-width:768px){
+  .nav-links{display:none;position:absolute;top:100%;left:0;right:0;background:rgba(10,14,26,.95);backdrop-filter:blur(20px);flex-direction:column;padding:1.5rem;gap:1rem;border-bottom:1px solid var(--border)}
+  .nav-links.open{display:flex}
+  .hamburger{display:flex}
+  .hero-stats{gap:2rem}
+  .contact-wrapper{grid-template-columns:1fr}
+  section{padding:4rem 1.25rem}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">
+    <svg viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="12" stroke="#3b82f6" stroke-width="2"/><circle cx="14" cy="14" r="5" fill="#3b82f6"/><line x1="18" y1="18" x2="24" y2="24" stroke="#3b82f6" stroke-width="2.5" stroke-linecap="round"/></svg>
+    Sleuth Data
+  </div>
+  <div class="nav-links" id="navLinks">
+    <a href="#services">Services</a>
+    <a href="#industries">Industries</a>
+    <a href="#how-it-works">How It Works</a>
+    <a href="#pricing">Pricing</a>
+    <a href="#contact" class="nav-cta">Get Started</a>
+  </div>
+  <button class="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content fade-up">
+    <div class="hero-badge">🔍 Data-as-a-Service</div>
+    <h1>Your Data Pipeline,<br><span>On Demand</span></h1>
+    <p>We turn public web data into structured, actionable datasets — delivered clean, on schedule, and ready to power your business decisions.</p>
+    <div class="hero-buttons">
+      <a href="#contact" class="btn btn-primary">Get a Free Sample →</a>
+      <a href="#how-it-works" class="btn btn-secondary">See How It Works</a>
+    </div>
+    <div class="hero-stats">
+      <div><strong>50M+</strong><span>Records Delivered</span></div>
+      <div><strong>99.9%</strong><span>Uptime SLA</span></div>
+      <div><strong>24hr</strong><span>Avg Setup Time</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="container">
+    <div class="text-center">
+      <div class="section-label fade-up">What We Do</div>
+      <h2 class="section-title fade-up">End-to-End Data Solutions</h2>
+      <p class="section-sub fade-up">From raw web pages to clean, structured data — we handle every step so you can focus on insights.</p>
+    </div>
+    <div class="services-grid">
+      <div class="service-card fade-up">
+        <div class="service-icon">
+          <svg width="24" height="24" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <h3>Web Scraping & Data Collection</h3>
+        <p>Automated extraction from any public website, at any scale. We handle anti-bot measures, CAPTCHAs, and dynamic content.</p>
+      </div>
+      <div class="service-card fade-up">
+        <div class="service-icon">
+          <svg width="24" height="24" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+        </div>
+        <h3>Data Cleaning & Structuring</h3>
+        <p>Raw data transformed into normalized, deduplicated, analysis-ready formats — CSV, JSON, database-ready schemas.</p>
+      </div>
+      <div class="service-card fade-up">
+        <div class="service-icon">
+          <svg width="24" height="24" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+        </div>
+        <h3>Custom API & Feed Delivery</h3>
+        <p>Get your data how you want it — REST API, webhooks, S3 drops, Google Sheets, or direct database writes.</p>
+      </div>
+      <div class="service-card fade-up">
+        <div class="service-icon">
+          <svg width="24" height="24" fill="none" stroke="#60a5fa" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 01-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+        </div>
+        <h3>Ongoing Monitoring & Maintenance</h3>
+        <p>Sites change — we adapt. Proactive monitoring, automatic error handling, and pipeline maintenance included.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section id="industries">
+  <div class="container">
+    <div class="text-center">
+      <div class="section-label fade-up">Industries We Serve</div>
+      <h2 class="section-title fade-up">Data for Every Sector</h2>
+      <p class="section-sub fade-up">From real estate to recruiting, we've built pipelines for companies across every industry.</p>
+    </div>
+    <div class="industries-grid">
+      <div class="industry-item fade-up"><span>🏠</span> Real Estate & PropTech</div>
+      <div class="industry-item fade-up"><span>🛒</span> E-commerce & Retail</div>
+      <div class="industry-item fade-up"><span>📊</span> Finance & Alternative Data</div>
+      <div class="industry-item fade-up"><span>🎯</span> Lead Generation & Sales</div>
+      <div class="industry-item fade-up"><span>⚽</span> Sports Analytics & Betting</div>
+      <div class="industry-item fade-up"><span>👥</span> Recruiting & HR</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works">
+  <div class="container">
+    <div class="text-center">
+      <div class="section-label fade-up">How It Works</div>
+      <h2 class="section-title fade-up">Three Steps to Clean Data</h2>
+      <p class="section-sub fade-up">No complex onboarding. No long contracts. Just tell us what you need.</p>
+    </div>
+    <div class="steps">
+      <div class="step fade-up">
+        <div class="step-num">1</div>
+        <h3>Tell Us What You Need</h3>
+        <p>Describe your target data — websites, fields, frequency. We'll scope it and send you a free sample within 24 hours.</p>
+      </div>
+      <div class="step fade-up">
+        <div class="step-num">2</div>
+        <h3>We Build Your Pipeline</h3>
+        <p>Our team builds a custom, resilient scraping pipeline tailored to your exact requirements and delivery preferences.</p>
+      </div>
+      <div class="step fade-up">
+        <div class="step-num">3</div>
+        <h3>Receive Clean Data</h3>
+        <p>Structured, validated data delivered on your schedule — daily, hourly, or real-time. API, CSV, database, you choose.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div class="text-center">
+      <div class="section-label fade-up">Pricing</div>
+      <h2 class="section-title fade-up">Simple, Transparent Pricing</h2>
+      <p class="section-sub fade-up">Every plan includes a free sample dataset. No commitment required.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="price-card fade-up">
+        <h3>Starter</h3>
+        <div class="price-amount">$99<span>/mo</span></div>
+        <p class="price-desc">Perfect for validating a data strategy</p>
+        <ul class="price-features">
+          <li>1 data source</li>
+          <li>Weekly delivery</li>
+          <li>CSV & JSON formats</li>
+          <li>Email support</li>
+          <li>Free sample dataset</li>
+        </ul>
+        <a href="#contact" class="btn btn-secondary">Get Started</a>
+      </div>
+      <div class="price-card featured fade-up">
+        <h3>Professional</h3>
+        <div class="price-amount">$299<span>/mo</span></div>
+        <p class="price-desc">For teams that need reliable, daily data</p>
+        <ul class="price-features">
+          <li>3 data sources</li>
+          <li>Daily delivery</li>
+          <li>REST API access</li>
+          <li>Priority support</li>
+          <li>Custom schema mapping</li>
+          <li>Free sample dataset</li>
+        </ul>
+        <a href="#contact" class="btn btn-primary">Get Started</a>
+      </div>
+      <div class="price-card fade-up">
+        <h3>Enterprise</h3>
+        <div class="price-amount">Custom</div>
+        <p class="price-desc">Unlimited scale, dedicated infrastructure</p>
+        <ul class="price-features">
+          <li>Unlimited data sources</li>
+          <li>Real-time delivery</li>
+          <li>Dedicated API endpoints</li>
+          <li>Dedicated account manager</li>
+          <li>Custom SLA</li>
+          <li>Free sample dataset</li>
+        </ul>
+        <a href="#contact" class="btn btn-secondary">Contact Us</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-wrapper">
+      <div class="contact-info fade-up">
+        <div class="section-label">Get in Touch</div>
+        <h3>Ready to unlock your data?</h3>
+        <p>Tell us what data you need and we'll send you a free sample dataset within 24 hours. No strings attached.</p>
+        <a href="mailto:jdsa@sleuthdatasolutions.com" class="contact-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><path d="M22 6l-10 7L2 6"/></svg>
+          jdsa@sleuthdatasolutions.com
+        </a>
+        <a href="https://sleuthdatasolutions.com" class="contact-link">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          sleuthdatasolutions.com
+        </a>
+      </div>
+      <form class="contact-form fade-up" onsubmit="handleSubmit(event)">
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" id="name" name="name" placeholder="Your name" required>
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="you@company.com" required>
+        </div>
+        <div class="form-group">
+          <label for="msg">What data do you need?</label>
+          <textarea id="msg" name="message" placeholder="Tell us about your project — target websites, data fields, delivery frequency..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">Get Your Free Sample →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <p>© 2026 Sleuth Data Solutions. All rights reserved. · <a href="mailto:jdsa@sleuthdatasolutions.com">jdsa@sleuthdatasolutions.com</a></p>
+  </div>
+</footer>
+
+<script>
+// Fade-in on scroll
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }});
+}, { threshold: 0.1 });
+document.querySelectorAll('.fade-up').forEach(el => obs.observe(el));
+
+// Form handler
+function handleSubmit(e) {
+  e.preventDefault();
+  const f = e.target;
+  const name = f.name.value;
+  const email = f.email.value;
+  const msg = f.message.value;
+  const subject = encodeURIComponent('Data Request from ' + name);
+  const body = encodeURIComponent('Name: ' + name + '\nEmail: ' + email + '\n\n' + msg);
+  window.location.href = 'mailto:jdsa@sleuthdatasolutions.com?subject=' + subject + '&body=' + body;
+}
+</script>
+</body>
+</html>
